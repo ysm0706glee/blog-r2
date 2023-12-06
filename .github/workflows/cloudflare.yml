@@ -1,0 +1,42 @@
+on:
+  push:
+    branches:
+      - main
+      - develop
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    name: Deploy
+    steps:
+      - uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: '1.0.10'
+
+      - uses: actions/checkout@v3
+
+      - name: Install Dependencies
+        run: bun i
+
+      - name: Set Environment Variables for Secrets
+        run: |
+          if [ "$GITHUB_REF" = "refs/heads/main" ]; then
+            echo "CLOUDFLARE_NAME=${{ secrets.CLOUDFLARE_NAME_MAIN }}" >> $GITHUB_ENV
+            echo "CLOUDFLARE_BUCKET_NAME=${{ secrets.CLOUDFLARE_BUCKET_NAME_MAIN }}" >> $GITHUB_ENV
+          elif [ "$GITHUB_REF" = "refs/heads/develop" ]; then
+            echo "CLOUDFLARE_NAME=${{ secrets.CLOUDFLARE_NAME_DEVELOP }}" >> $GITHUB_ENV
+            echo "CLOUDFLARE_BUCKET_NAME=${{ secrets.CLOUDFLARE_BUCKET_NAME_DEVELOP }}" >> $GITHUB_ENV
+          fi
+
+      - name: Modify wrangler.toml
+        run: |
+          sed -i "s|placeholder_for_name|$CLOUDFLARE_NAME|" wrangler.toml
+          sed -i "s|placeholder_for_bucket_name|$CLOUDFLARE_BUCKET_NAME|" wrangler.toml
+
+      - name: Deploy
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        env:
+          AUTH_KEY_SECRET: ${{ secrets.AUTH_KEY_SECRET }}
