@@ -1,10 +1,10 @@
 interface Env {
-	AUTH_KEY_SECRET: string;
+	AUTH_KEY: string;
 	MY_BUCKET: KVNamespace;
 }
 
 const hasValidHeader = (request: Request, env: Env): boolean => {
-	return request.headers.get('Auth-Key') === env.AUTH_KEY_SECRET;
+	return request.headers.get('Auth-Key') === env.AUTH_KEY;
 };
 
 const authorizeRequest = (request: Request, env: Env, key: string): boolean => {
