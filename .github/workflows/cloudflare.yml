@@ -38,5 +38,3 @@ jobs:
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-        env:
-          AUTH_KEY: ${{ secrets.AUTH_KEY }}
