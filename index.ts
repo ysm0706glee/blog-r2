@@ -17,14 +17,15 @@ const authorizeRequest = (request: Request, env: Env, key: string): boolean => {
 	}
 };
 
-const productionHostname = 'https://takumaaa.dev';
-const productionDomain = 'https://image.takumaaa.dev';
+const productionHostname = 'https://blog-production-r2.ysm0706glee.workers.dev';
+const productionCustomDomain = 'https://image.takumaaa.dev';
+const developmentDomain = 'https://pub-d3708211c39144ae993289f07732706f.r2.dev';
 
 const isProduction = (hostname: string) => hostname === productionHostname;
 
 const createImageUrl = (hostname: string, key: string) => {
-	if (isProduction(hostname)) return `${productionDomain}/${key}`;
-	return `https://pub-d3708211c39144ae993289f07732706f.r2.dev/${key}`;
+	if (isProduction(hostname)) return `${productionCustomDomain}/${key}`;
+	return `${developmentDomain}/${key}`;
 };
 
 export default {
