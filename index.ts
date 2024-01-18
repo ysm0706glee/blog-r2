@@ -17,6 +17,16 @@ const authorizeRequest = (request: Request, env: Env, key: string): boolean => {
 	}
 };
 
+const productionHostname = 'https://takumaaa.dev';
+const productionDomain = 'https://image.takumaaa.dev';
+
+const isProduction = (hostname: string) => hostname === productionHostname;
+
+const createImageUrl = (hostname: string, key: string) => {
+	if (isProduction(hostname)) return `${productionDomain}/${key}`;
+	return `https://pub-d3708211c39144ae993289f07732706f.r2.dev/${key}`;
+};
+
 export default {
 	async fetch(request: Request, env: Env): Promise<Response> {
 		const url = new URL(request.url);
@@ -28,8 +38,8 @@ export default {
 			case 'PUT':
 				if (request.body) {
 					await env.MY_BUCKET.put(key, request.body);
-					const url = `https://pub-d3708211c39144ae993289f07732706f.r2.dev/${key}`;
-					return new Response(JSON.stringify({ url }));
+					const imageUrl = createImageUrl(url.hostname, key);
+					return new Response(JSON.stringify({ url: imageUrl }));
 				} else {
 					return new Response('Request body is missing', {
 						status: 400,
