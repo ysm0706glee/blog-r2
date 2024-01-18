@@ -17,7 +17,7 @@ const authorizeRequest = (request: Request, env: Env, key: string): boolean => {
 	}
 };
 
-const productionHostname = 'https://blog-production-r2.ysm0706glee.workers.dev';
+const productionHostname = 'blog-production-r2.ysm0706glee.workers.dev';
 const productionCustomDomain = 'https://image.takumaaa.dev';
 const developmentDomain = 'https://pub-d3708211c39144ae993289f07732706f.r2.dev';
 
